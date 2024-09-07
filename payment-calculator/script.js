@@ -266,6 +266,44 @@ function updateRates() {
     }
 }
 
+// Function to download payment data as Excel file
+function downloadExcel() {
+    let cards = document.querySelectorAll('#summary-list .card');
+    let data = [];
+    
+    cards.forEach(card => {
+        let studentName = card.querySelector('.card-title').textContent;
+        let totalHours = parseFloat(card.querySelector('.card-text').innerHTML.split('סך כל השעות: ')[1].split('<br>')[0]);
+        let paymentAmount = parseFloat(card.querySelector('.card-text').innerHTML.split('תשלום: ₪')[1].split('<br>')[0]);
+        let studentAge = card.querySelector('.card-text').innerHTML.includes('ישיבה קטנה') ? 'ישיבה קטנה' : 'יש"ג';
+        let isPaid = card.querySelector('.card-text').innerHTML.includes('<strong style="color: red;">שולם</strong>') ? 'שולם' : 'לא שולם';
+        
+        data.push({
+            'שם תלמיד': studentName,
+            'סך כל השעות': totalHours,
+            'סכום לתשלום': paymentAmount,
+            'סוג תלמיד': studentAge,
+            'סטטוס תשלום': isPaid
+        });
+    });
+
+    // Create worksheet
+    let ws = XLSX.utils.json_to_sheet(data, {
+        header: ["שם תלמיד", "סך כל השעות", "סכום לתשלום", "סוג תלמיד", "סטטוס תשלום"]
+    });
+
+    // Create workbook
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "תמצית תשלומים");
+
+    // Write to file
+    XLSX.writeFile(wb, "payment_summary.xlsx");
+}
+
+// Add event listener to the download button
+document.getElementById('download-excel').addEventListener('click', downloadExcel);
+
+
 // Initialize tooltips
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
