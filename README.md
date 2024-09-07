@@ -53,17 +53,6 @@ This service implements **face recognition** using Flask and the `face_recogniti
 #### Example Request:
 ```bash
 curl -X POST -F "image=@unknown.jpg" http://localhost:5000/upload
-111
-### 2. Custom Image Upload (`/upload-custom`)
-
-- **Method**: `POST`
-- **Description**: Upload a new image to the database with a custom name.
-- **Request**: Form-data with the file under key `image` and a name under `name`.
-- **Response**:
-    - `{"message": "Image uploaded and added to image_paths successfully"}`.
-
-#### Example Request:
-```bash
-curl -X POST -F "image=@new_person.jpg" -F "name=John" http://localhost:5000/upload-custom
+```
 
 נ
